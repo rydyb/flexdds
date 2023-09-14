@@ -4,12 +4,16 @@ import (
 	"log"
 
 	"github.com/alecthomas/kong"
+	"github.com/rydyb/flexdds"
 )
 
 var cli struct {
-	Host       string `name:"host" required:"" help:"The hostname or ip address of the FlexDDS controller."`
-	Slot       uint16 `name:"slot" required:"" help:"The number of the FlexDDS slot from 0 to 5."`
-	Channel    uint8  `name:"channel" required:"" help:"The number of the FlexDDS channel 0 or 1."`
+	Host              string `name:"host" required:"" help:"The hostname or ip address of the FlexDDS controller."`
+	Slot              uint16 `name:"slot" required:"" help:"The number of the FlexDDS slot from 0 to 5."`
+	Channel           uint8  `name:"channel" required:"" help:"The number of the FlexDDS channel 0 or 1."`
+	LogAmplScaleToASF struct {
+		Amplitude float64 `name:"amplitude" help:"The amplitude in dBm."`
+	} `cmd:"logarithmic-amplitude-to-asf" help:"Convert logarithmic amplitude scale to ASF register value."`
 	Singletone struct {
 		Amplitude float64 `name:"amplitude" help:"The singletone amplitude in dBm."`
 		Frequency float64 `name:"frequency" required:"" help:"The frequency of the singletone in Hz."`
@@ -26,7 +30,7 @@ func main() {
 		log.Fatalf("Channel number has to be zero or one.")
 	}
 
-	flexdds, err := Open(cli.Host, cli.Slot)
+	flexdds, err := flexdds.Open(cli.Host, cli.Slot)
 	if err != nil {
 		log.Fatalf("failed to open connection to %s: %s", cli.Host, err)
 	}

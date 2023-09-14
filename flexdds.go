@@ -1,16 +1,18 @@
-package main
+package flexdds
 
 import (
 	"fmt"
 	"time"
 
+	"github.com/rs/zerolog/log"
+	"github.com/rydyb/flexdds/ad9910"
 	"github.com/rydyb/telnet"
 )
 
 // FlexDDS is a telnet client to the FlexDDS controller.
 type FlexDDS struct {
-	ad9910 AD9910
-	client telnet.Client
+	SysClock float64
+	client   telnet.Client
 }
 
 // Open returns a new FlexDDS client for a controller with addr and DDS slot.
@@ -34,10 +36,8 @@ func Open(host string, slot uint16) (*FlexDDS, error) {
 	}
 
 	return &FlexDDS{
-		ad9910: AD9910{
-			SysClock: 1e9,
-		},
-		client: client,
+		SysClock: 1e9,
+		client:   client,
 	}, nil
 }
 
@@ -48,15 +48,15 @@ func (c *FlexDDS) Close() error {
 
 // Singletone configures channel to output a single frequency with relative amplitude.
 func (c *FlexDDS) Singletone(ch uint8, ampl, freq float64) error {
-	asf := c.ad9910.LogAmplScaleToASF(ampl)
-	ftw := c.ad9910.FreqOutputToFTW(freq)
-
-	stp0 := (uint64(asf) << 48) | uint64(ftw)
+	asf := ad9910.LogAmplScaleToASF(ampl)
+	log.Debug().Msgf("asf: %X", asf)
+	ftw := ad9910.FreqOutToFTW(freq, c.SysClock)
+	log.Debug().Msgf("ftw: %x", ftw)
 
 	if _, err := c.client.Exec(fmt.Sprintf("dcp %d spi:cfr2=0x01400820", ch)); err != nil {
 		return fmt.Errorf("failed to configure CFR2 register: %w", err)
 	}
-	if _, err := c.client.Exec(fmt.Sprintf("dcp %d spi:stp0=%x", ch, stp0)); err != nil {
+	if _, err := c.client.Exec(fmt.Sprintf("dcp %d spi:stp0=%x0000%x", ch, asf, ftw)); err != nil {
 		return fmt.Errorf("failed to configure STP0 register: %w", err)
 	}
 	if _, err := c.client.Exec(fmt.Sprintf("dcp %d update:u", ch)); err != nil {

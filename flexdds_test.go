@@ -1,4 +1,4 @@
-package main
+package flexdds
 
 import "testing"
 
@@ -8,7 +8,7 @@ func TestFlexDDS(t *testing.T) {
 		t.Fatalf("failed to open flexdds connection: %s", err)
 	}
 
-	if err := flexdds.Singletone(0, 0.0, 80e6); err != nil {
+	if err := flexdds.Singletone(0, 0.0, 10e6); err != nil {
 		t.Errorf("failed to configure channel 0 as singletone: %s", err)
 	}
 
