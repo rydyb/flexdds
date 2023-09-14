@@ -8,25 +8,25 @@ You can download the compiled binaries for your platform from the GitHub release
 
 ### Convert
 
-The `convert` tool supports you in the conversion of the output frequency and the amplitude scale to the register values, e.g.,
+The `flexdds-convert` tool supports you in the conversion of the output frequency and the amplitude scale to the register values, e.g.,
 
 ```shell
-./convert freq-out 10e6
+./flexdds-convert freq-out 10e6
 # Output: 0x28f5c29
 
-./convert log-ampl-scale 0.0
+./flexdds-convert log-ampl-scale 0.0
 # Output: 0x4000
 
-./convert lin-ampl-scale 0.0
+./flexdds-convert lin-ampl-scale 0.0
 # Output: 0x0
 ```
 
 ### Control
 
-The `control` tool allows you to configure a slot of the FlexDDS, e.g., to singletone output:
+The `flexdds-control` tool allows you to configure a slot of the FlexDDS, e.g., to singletone output:
 
 ```shell
-./control \
+./flexdds-control \
     --host=10.163.100.7 \
     --slot=2 \
     --channel=0 \
