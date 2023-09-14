@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/rs/zerolog/log"
 	"github.com/rydyb/flexdds/ad9910"
 	"github.com/rydyb/telnet"
 )
@@ -55,9 +54,7 @@ func (c *Client) Close() error {
 // Singletone configures channel to output a single frequency with relative amplitude.
 func (c *Client) Singletone(ch uint8, ampl, freq float64) error {
 	asf := ad9910.LogAmplScaleToASF(ampl)
-	log.Debug().Msgf("asf: %X", asf)
 	ftw := ad9910.FreqOutToFTW(freq, c.config.SysClock)
-	log.Debug().Msgf("ftw: %x", ftw)
 
 	if _, err := c.client.Exec(fmt.Sprintf("dcp %d spi:cfr2=0x01400820", ch)); err != nil {
 		return fmt.Errorf("failed to configure CFR2 register: %w", err)

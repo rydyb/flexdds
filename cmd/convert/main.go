@@ -11,7 +11,7 @@ type Ctx struct{}
 
 type FreqOutCmd struct {
 	SysClock float64 `name:"system-clock" default:"1e9" help:"The system' clocks frequency in Hz."`
-	FreqOut  float64 `arg:"" name:"frequency-output" help:"The output frequency in Hz."`
+	FreqOut  float64 `arg:"" name:"frequency" help:"The output frequency in Hz."`
 }
 
 func (cmd *FreqOutCmd) Run(ctx *Ctx) error {
@@ -38,9 +38,9 @@ func (cmd *LogAmplScaleCmd) Run(ctx *Ctx) error {
 }
 
 var cli struct {
-	FreqOut      FreqOutCmd      `cmd:"frequency-output" help:"Convert an output frequency in Hz to FTW register value."`
-	LogAmplScale LogAmplScaleCmd `cmd:"log-amplitude-scale" help:"Convert logarithmic amplitude scale in dBm to ASF register value."`
-	LinAmplScale LinAmplScaleCmd `cmd:"lin-amplitude-scale" help:"Convert linear amplitude scale from 0.0 to 1.0 to ASF register value."`
+	FreqOut      FreqOutCmd      `cmd:"freq-out" help:"Convert an output frequency in Hz to FTW register value."`
+	LogAmplScale LogAmplScaleCmd `cmd:"log-ampl-scale" help:"Convert logarithmic amplitude scale in dBm to ASF register value."`
+	LinAmplScale LinAmplScaleCmd `cmd:"lin-ampl-scale" help:"Convert linear amplitude scale from 0.0 to 1.0 to ASF register value."`
 }
 
 func main() {

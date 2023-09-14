@@ -13,8 +13,8 @@ var cli struct {
 	Channel    uint8   `name:"channel" required:"" help:"The number of the FlexDDS channel 0 or 1."`
 	SysClock   float64 `name:"system-clock" default:"1e9" help:"The system' clocks frequency in Hz."`
 	Singletone struct {
-		Amplitude float64 `name:"amplitude" help:"The singletone amplitude in dBm."`
-		Frequency float64 `name:"frequency" required:"" help:"The frequency of the singletone in Hz."`
+		LogAmplitude float64 `name:"log-amplitude" help:"The singletone amplitude in dBm."`
+		Frequency    float64 `name:"frequency" required:"" help:"The frequency of the singletone in Hz."`
 	} `cmd:"singletone" help:"Configure a singletone output."`
 }
 
@@ -40,8 +40,8 @@ func main() {
 
 	switch args.Command() {
 	case "singletone":
-		if err := flexdds.Singletone(cli.Channel, cli.Singletone.Amplitude, cli.Singletone.Frequency); err != nil {
-			log.Fatalf("failed to configure channel %d to singletone with amplitude %f and frequency %f: %s", cli.Channel, cli.Singletone.Amplitude, cli.Singletone.Frequency, err)
+		if err := flexdds.Singletone(cli.Channel, cli.Singletone.LogAmplitude, cli.Singletone.Frequency); err != nil {
+			log.Fatalf("failed to configure channel %d to singletone with amplitude %f and frequency %f: %s", cli.Channel, cli.Singletone.LogAmplitude, cli.Singletone.Frequency, err)
 		}
 	}
 }
